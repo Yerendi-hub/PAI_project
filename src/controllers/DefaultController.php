@@ -6,11 +6,11 @@ class DefaultController extends AppController {
 
     public function index()
     {
-        $this->render('dashboard');
+        $this->render('index');
     }
 
     public function projects()
     {
-        $this->render('dashboard');
+        $this->render('index');
     }
 }

@@ -151,7 +151,7 @@ ul{
 .form {
     width: 90vw;
     max-width: var(--fixed-width);
-    background: var(--white);
+    background: var(--gray-700);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-2);
     padding: var(--form-padding);
@@ -163,6 +163,8 @@ ul{
     font-size: var(--textSmall);
     margin-bottom: 0.5rem;
     letter-spacing: var(--letterSpacing);
+    font-family: inherit;
+    color: var(--heading-color);
 }
 
 .form-input,
@@ -172,6 +174,8 @@ ul{
     border-radius: var(--border-radius);
     background: var(--bg-color);
     border: 1px solid var(--gray-200);
+    font-family: inherit;
+    color: var(--gray-200)
 }
 
 .form-row {
