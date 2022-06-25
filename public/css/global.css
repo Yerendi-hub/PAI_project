@@ -46,8 +46,9 @@ html {font-size: 100%;} /*16px*/
     --border-radius: 0.25rem;
     --letterSpacing: 1px;
     --transition: 0.3s ease-in-out all;
-    --max-width:1120px;
+    --max-width:1000px;
     --fixed-width:600px;
+    --percentage-width: 90vw;
     --default-padding: 0.375rem 0.75rem;
     --form-padding: 2rem 2.5rem;
 

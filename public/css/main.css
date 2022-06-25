@@ -1,0 +1,127 @@
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-center {
+    width: var(--percentage-width);
+    max-width: var(--max-width);
+}
+
+.nav-header {
+    height: 6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+}
+
+.nav-header img {
+    width: 200px;
+}
+
+.nav-btn {
+    padding: 0.15rem 0.75rem;
+}
+
+.nav-btn i {
+    font-size: 1rem;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    height: 0;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.show-links {
+    height: 310px;
+}
+
+.nav-link {
+    display: block;
+    text-align: center;
+    color: var(--gray-100);
+    letter-spacing: var(--letterSpacing);
+    padding: 1rem 0;
+    border-top: 1px solid var(--gray-300);
+    transition: var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--primary-500)
+}
+
+.login-link a{
+   padding: 0.15rem 1rem;
+}
+
+@media screen and (min-width: 992px) {
+    .nav-btn{
+        display: none;
+    }
+
+    .navbar{
+        height: 6rem;
+    }
+
+    .nav-center {
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-header {
+        height: auto;
+        margin-right: 2rem;
+    }
+
+    .nav-links {
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+    }
+
+    .nav-link
+    {
+        padding: 0;
+        border-top:none;
+        margin-right: 1rem;
+        font-size: 1rem;
+    }
+
+    .login-link {
+        margin-left: auto;
+        margin-right: 0;
+    }
+}
+
+.page {
+    background: red;
+    width: var(--percentage-width);
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding-top: 2rem;
+    min-height: calc(100vh - (6rem + 4rem));
+}
+
+.page-footer{
+    height: 4rem;
+    text-align: center;
+    background: var(--black);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-logo {
+    color: var(--primary-500)
+}
