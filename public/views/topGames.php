@@ -11,7 +11,13 @@
         include("public/templates/navbar.php")
         ?>
         <main class="page">
-            <h1>Top games</h1>
+            <?php
+            if(isset($topGames)){
+                foreach($topGames as $game) {
+                    echo '<div class="alert alert-danger">'.$game.'</div>';
+                }
+            }
+            ?>
         </main>
         <?
         include("public/templates/footer.php")

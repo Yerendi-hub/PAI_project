@@ -2,11 +2,12 @@
 
 require_once 'AppController.php';
 require_once __DIR__ .'/../models/User.php';
+require_once __DIR__.'/../repository/UserRepository.php';
 
 class LoginController extends AppController {
     public function postLogin()
     {
-        $user = new User('jsnow@pk.edu.pl', 'admin', 'Johnny', 'Snow');
+        $userRepository = new UserRepository();
 
         if (!$this->isPost()) {
             return $this->render('login');
@@ -14,6 +15,12 @@ class LoginController extends AppController {
 
         $email = $_POST['email'];
         $password = $_POST['password'];
+
+        $user = $userRepository->getUser($email);
+
+        if (!$user) {
+            return $this->render('login', ['messages' => ['User not found!']]);
+        }
 
         if ($user->getEmail() !== $email) {
             return $this->render('login', ['messages' => ['User with this email not exist!']]);

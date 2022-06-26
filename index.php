@@ -1,6 +1,7 @@
 <?php
 
-require 'Routing.php';
+require_once 'Routing.php';
+require_once 'src/models/SteamTopGames.php';
 
 $path = trim($_SERVER['REQUEST_URI'], '/');
 $path = parse_url($path, PHP_URL_PATH);
@@ -16,3 +17,4 @@ Routing::get('userGames', "UserGamesController");
 Routing::get('contact', "ContactController");
 Routing::get('error', "ErrorController");
 Routing::run($path);
+//SteamTopGames::init();
