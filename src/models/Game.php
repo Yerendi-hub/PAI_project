@@ -5,66 +5,132 @@ class Game
     private $dbId;
     private $steamId;
     private $name;
-    private $ccu;
-    private $image;
+    private $description;
+    private $likes;
+    private $dislikes;
+    private $owner;
 
-    public function __construct($dbId, $steamId, $name, $ccu, $image)
+    public function __construct($name, $description, $steamId, $owner, $likes = 0, $dislikes = 0, $id = null)
     {
-        $this->dbId = $dbId;
+        $this->dbId = $id;
         $this->steamId = $steamId;
         $this->name = $name;
-        $this->ccu = $ccu;
-        $this->image = $image;
+        $this->description = $description;
+        $this->likes = $likes;
+        $this->dislikes = $dislikes;
+        $this->owner = $owner;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @param mixed $owner
+     */
+    public function setOwner($owner): void
+    {
+        $this->owner = $owner;
+    }
+
+    /**
+     * @return mixed|null
+     */
     public function getDbId()
     {
         return $this->dbId;
     }
 
+    /**
+     * @param mixed|null $dbId
+     */
     public function setDbId($dbId): void
     {
         $this->dbId = $dbId;
     }
 
+    /**
+     * @return mixed
+     */
     public function getSteamId()
     {
         return $this->steamId;
     }
 
+    /**
+     * @param mixed $steamId
+     */
     public function setSteamId($steamId): void
     {
         $this->steamId = $steamId;
     }
 
+    /**
+     * @return mixed
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param mixed $name
+     */
     public function setName($name): void
     {
         $this->name = $name;
     }
 
-    public function getCcu()
+    /**
+     * @return mixed
+     */
+    public function getDescription()
     {
-        return $this->ccu;
+        return $this->description;
     }
 
-    public function setCcu($ccu): void
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
     {
-        $this->ccu = $ccu;
+        $this->description = $description;
     }
 
-    public function getImage()
+    /**
+     * @return int|mixed
+     */
+    public function getLikes()
     {
-        return $this->image;
+        return $this->likes;
     }
 
-    public function setImage($image): void
+    /**
+     * @param int|mixed $likes
+     */
+    public function setLikes($likes): void
     {
-        $this->image = $image;
+        $this->likes = $likes;
+    }
+
+    /**
+     * @return int|mixed
+     */
+    public function getDislikes()
+    {
+        return $this->dislikes;
+    }
+
+    /**
+     * @param int|mixed $dislikes
+     */
+    public function setDislikes($dislikes): void
+    {
+        $this->dislikes = $dislikes;
     }
 
 

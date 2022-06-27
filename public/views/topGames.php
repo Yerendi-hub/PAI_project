@@ -12,9 +12,9 @@
         ?>
         <main class="page">
             <?php
-            if(isset($topGames)){
-                foreach($topGames as $game) {
-                    echo '<div class="alert alert-danger">'.$game.'</div>';
+            if(isset($games)){
+                foreach($games as $game) {
+                    echo '<h1>'.$game->getName().'</h1>';
                 }
             }
             ?>

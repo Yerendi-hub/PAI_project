@@ -11,7 +11,18 @@
         include("public/templates/navbar.php")
         ?>
         <main class="page">
-            <h1>User games</h1>
+            <div>
+                <?php
+                if(isset($games)){
+                    foreach($games as $game) {
+                        echo '<h1>'.$game->getName().'</h1>';
+                    }
+                }
+                else{
+                    echo '<h1> please log in </h1>';
+                }
+                ?>
+            </div>
         </main>
         <?
         include("public/templates/footer.php")

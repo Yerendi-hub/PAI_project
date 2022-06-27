@@ -1,11 +1,15 @@
 <?php
 
+require_once __DIR__.'/../utils/SessionManager.php';
+
 class AppController {
     private $request;
+    protected $sessionManager;
 
     public function __construct()
     {
         $this->request = $_SERVER['REQUEST_METHOD'];
+        $this->sessionManager = new SessionManager();
     }
 
     protected function isGet(): bool
@@ -20,6 +24,11 @@ class AppController {
 
     protected function render(string $template = null, array $variables = [])
     {
+        if($this->sessionManager->validateSession())
+        {
+            $variables['isLogin'] = 'true';
+        }
+
         $templatePath = 'public/views/'. $template.'.php';
         $output = 'File not found';
 

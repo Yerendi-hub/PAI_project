@@ -5,6 +5,7 @@ require_once __DIR__ .'/../models/User.php';
 require_once __DIR__.'/../repository/UserRepository.php';
 
 class LoginController extends AppController {
+
     public function postLogin()
     {
         $userRepository = new UserRepository();
@@ -30,6 +31,8 @@ class LoginController extends AppController {
             return $this->render('login', ['messages' => ['Wrong password!']]);
         }
 
+        $this->sessionManager->startSession($user);
+
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/index");
     }
@@ -37,5 +40,11 @@ class LoginController extends AppController {
     public function login()
     {
         $this->render("login");
+    }
+
+    public function logout()
+    {
+        $this->sessionManager->closeSession();
+        $this->render("index");
     }
 }

@@ -2,7 +2,7 @@
 
 require_once 'AppController.php';
 
-class ContactController extends AppController {
+class FavoriteGamesController extends AppController {
 
     public function contact()
     {

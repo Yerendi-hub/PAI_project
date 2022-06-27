@@ -14,7 +14,17 @@
             <a href="userGames" class="nav-link"> Your games </a>
             <a href="contact" class="nav-link"> Contact </a>
             <div class="nav-link login-link">
-                <a href="login" class="btn"> Login </a>
+                <?
+                if(isset($isLogin)){
+                        echo '<a href="logout" class="btn"> Logout </a>';
+                }
+                else{
+                    echo '<a href="login" class="btn"> Login </a>';
+                }
+                ?>
+
+
+
             </div>
         </div>
 

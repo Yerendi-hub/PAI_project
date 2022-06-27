@@ -1,16 +1,21 @@
 <?php
 
 require_once 'AppController.php';
+require_once __DIR__ . '/../repository/GameRepository.php';
 
 class DefaultController extends AppController {
 
-    public function index()
+    private $gamesRepository;
+
+    public function __construct()
     {
-        $this->render('index');
+        parent::__construct();
+        $this->gamesRepository = new GameRepository();
     }
 
-    public function projects()
+    public function index()
     {
-        $this->render('index');
+        $games = $this->gamesRepository->getGames();
+        $this->render('index', ['games' => $games]);
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Contact</title>
+        <title>Favorite games</title>
         <?
         include("public/templates/head.php")
         ?>
@@ -11,7 +11,7 @@
         include("public/templates/navbar.php")
         ?>
         <main class="page">
-            <h1>Contact</h1>
+            <h1>Favorite games</h1>
         </main>
         <?
         include("public/templates/footer.php")
