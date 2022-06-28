@@ -11,12 +11,8 @@
         include("public/templates/navbar.php")
         ?>
         <main class="page">
-            <?php
-            if(isset($games)){
-                foreach($games as $game) {
-                    echo '<h1>'.$game->getName().'</h1>';
-                }
-            }
+            <?
+            include("public/templates/games.php")
             ?>
         </main>
         <?

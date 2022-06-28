@@ -20,16 +20,9 @@
                 </div>
             </header>
 
-            <div>
-                <?php
-                if(isset($games)){
-                    foreach($games as $game) {
-                        echo '<h1>'.$game->getName().'</h1>';
-                    }
-                }
-                ?>
-
-            </div>
+            <?
+            include("public/templates/games.php")
+            ?>
         </main>
         <?
         include("public/templates/footer.php")

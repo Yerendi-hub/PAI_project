@@ -8,7 +8,7 @@ class GameRepository extends Repository
     public function getGame(int $id): ?Game
     {
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM public.games WHERE id = :id
+            SELECT * FROM games JOIN images ON games.image = images.id WHERE games.id = :id
         ');
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -18,22 +18,34 @@ class GameRepository extends Repository
         if (!$game) {
             return null;
         }
+
         return new Game(
             $game['name'],
             $game['description'],
-            $game['steamId']
+            $game['steamid'],
+            $game['owner'],
+            $game['binary_data'],
+            $game['likes'],
+            $game['dislikes'],
+            $game['id']
         );
+    }
+    public function addImage($image): string
+    {
+        $connection = $this->database->connect();
+        $stmt = $connection->prepare($this->insertImageSql());
+
+        $stmt->execute([$image]);
+
+        return $connection->lastInsertId();
     }
 
     public function addGame(Game $game): void
     {
-        $stmt = $this->database->connect()->prepare('
-            INSERT INTO games (name, likes, dislikes, description, steamId, owner)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ');
+        $id = $this->addImage($game->getImage());
+        $stmt = $this->database->connect()->prepare($this->insertGameSql());
 
-        //TODO you should get this value from logged user session
-        $assignedById = 1;
+        $assignedById = $_SESSION['user'];
 
         $stmt->execute([
             $game->getName(),
@@ -41,7 +53,8 @@ class GameRepository extends Repository
             $game->getDislikes(),
             $game->getDescription(),
             $game->getSteamId(),
-            $assignedById
+            $assignedById,
+            $id
         ]);
     }
 
@@ -50,24 +63,10 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games;
+            SELECT * FROM games JOIN images ON games.image = images.id;
         ');
-        $stmt->execute();
-        $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($games as $game) {
-            $result[] = new Game(
-                $game['name'],
-                $game['description'],
-                $game['steamId'],
-                $game['owner'],
-                $game['likes'],
-                $game['dislikes'],
-                $game['id']
-            );
-        }
-
-        return $result;
+        return $this->fetch_games($stmt, $result);
     }
 
     public function getTopGames(): array
@@ -75,25 +74,10 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games ORDER BY likes/NULLIF(likes+dislikes,0) desc LIMIT 1;
+            SELECT * FROM games JOIN images ON games.image = images.id ORDER BY likes/NULLIF(likes+dislikes,0) desc LIMIT 1;
         ');
 
-        $stmt->execute();
-        $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($games as $game) {
-            $result[] = new Game(
-                $game['name'],
-                $game['description'],
-                $game['steamId'],
-                $game['owner'],
-                $game['likes'],
-                $game['dislikes'],
-                $game['id']
-            );
-        }
-
-        return $result;
+        return $this->fetch_games($stmt, $result);
     }
 
     public function getPlayerGames(int $userId): array
@@ -101,27 +85,11 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games WHERE owner = :id;
+            SELECT * FROM games JOIN images ON games.image = images.id WHERE games.owner = :id;
         ');
 
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($games as $game) {
-            $result[] = new Game(
-                $game['name'],
-                $game['description'],
-                $game['steamId'],
-                $game['owner'],
-                $game['likes'],
-                $game['dislikes'],
-                $game['id']
-            );
-        }
-
-        return $result;
+        return $this->fetch_games($stmt, $result);
     }
 
     public function getGameByTitle(string $searchString)
@@ -153,5 +121,42 @@ class GameRepository extends Repository
 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    public function insertGameSql()
+    {
+        return '
+            INSERT INTO games (name, likes, dislikes, description, steamid, owner, image)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ';
+    }
+
+    public function insertImageSql()
+    {
+        return '
+            INSERT INTO images (binary_data)
+            VALUES (?)
+        ';
+    }
+
+    public function fetch_games($stmt, array $result): array
+    {
+        $stmt->execute();
+        $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($games as $game) {
+            $result[] = new Game(
+                $game['name'],
+                $game['description'],
+                $game['steamid'],
+                $game['owner'],
+                $game['binary_data'],
+                $game['likes'],
+                $game['dislikes'],
+                $game['id']
+            );
+        }
+
+        return $result;
     }
 }

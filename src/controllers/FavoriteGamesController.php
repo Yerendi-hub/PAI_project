@@ -4,8 +4,8 @@ require_once 'AppController.php';
 
 class FavoriteGamesController extends AppController {
 
-    public function contact()
+    public function favoriteGames()
     {
-        $this->render('contact');
+        $this->render('favoriteGames');
     }
 }

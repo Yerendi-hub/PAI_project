@@ -8,6 +8,10 @@ class UserGamesController extends AppController {
     private $message = [];
     private $gamesRepository;
 
+    const MAX_FILE_SIZE = 1024 * 1024;
+    const SUPPORTED_TYPES = ['image/png', 'image/jpeg'];
+    const UPLOAD_DIRECTORY = '/../public/uploads/';
+
     public function __construct()
     {
         parent::__construct();
@@ -19,18 +23,29 @@ class UserGamesController extends AppController {
         if($this->sessionManager->validateSession())
         {
             $games = $this->gamesRepository->getPlayerGames($_SESSION['user']);
-            $this->render('userGames', ['games' => $games]);
+            return $this->render('userGames', ['games' => $games]);
         }
-        else{
-            $this->render('userGames');
-        }
+        return $this->render('userGames');
     }
 
     public function addGame()
     {
-        if ($this->isPost()) {
+        if($this->sessionManager->validateSession() && $this->isPost()
+            && is_uploaded_file($_FILES['file']['tmp_name']) && $this->validate($_FILES['file']))
+        {
+            $dir = $_FILES['file']['tmp_name'];
+            move_uploaded_file(
+                $_FILES['file']['tmp_name'],
+                $dir
+            );
 
-            $game = new Game($_POST['name'], $_POST['description'], $_POST['steamId']);
+            $path = $_FILES['file']['tmp_name'];
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            $game = new Game($_POST['name'], $_POST['description'], $_POST['steamId'],1, $base64);
+
             $this->gamesRepository->addGame($game);
 
             return $this->render('userGames', [
@@ -38,8 +53,7 @@ class UserGamesController extends AppController {
                 'games' => $this->gamesRepository->getGames()
             ]);
         }
-
-        return $this->render('add-project', ['messages' => $this->message]);
+        return $this->render('userGames');
     }
 
     public function search()
@@ -55,6 +69,20 @@ class UserGamesController extends AppController {
 
             echo json_encode($this->gamesRepository->getProjectByTitle($decoded['search']));
         }
+    }
+
+    private function validate(array $file): bool
+    {
+        if ($file['size'] > self::MAX_FILE_SIZE) {
+            $this->message[] = 'File is too large for destination file system.';
+            return false;
+        }
+
+        if (!isset($file['type']) || !in_array($file['type'], self::SUPPORTED_TYPES)) {
+            $this->message[] = 'File type is not supported.';
+            return false;
+        }
+        return true;
     }
 
     public function like(int $id) {

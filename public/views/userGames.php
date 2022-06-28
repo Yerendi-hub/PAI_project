@@ -14,15 +14,32 @@
             <div>
                 <?php
                 if(isset($games)){
-                    foreach($games as $game) {
-                        echo '<h1>'.$game->getName().'</h1>';
-                    }
+                    include("public/templates/games.php");
                 }
                 else{
                     echo '<h1> please log in </h1>';
                 }
                 ?>
             </div>
+
+            <h1>UPLOAD</h1>
+            <form action="addGame" method="POST" ENCTYPE="multipart/form-data">
+                <div class="messages">
+                    <?php
+                    if(isset($messages)){
+                        foreach($messages as $message) {
+                            echo $message;
+                        }
+                    }
+                    ?>
+                </div>
+                <input name="name" type="text" placeholder="name">
+                <textarea name="description" rows=5 placeholder="description"></textarea>
+                <input name="steamId" type="number" placeholder="id">
+                <input type="file" name="file"/><br/>
+                <button type="submit">send</button>
+            </form>
+
         </main>
         <?
         include("public/templates/footer.php")

@@ -160,3 +160,50 @@
 {
     text-align: center;
 }
+
+.register-text {
+    display: block;
+    text-align: center;
+    color: var(--gray-100);
+    letter-spacing: var(--letterSpacing);
+}
+
+.register-link {
+    display: block;
+    text-align: center;
+    letter-spacing: var(--letterSpacing);
+    transition: var(--transition);
+}
+
+.register-link:hover {
+    color: var(--primary-500)
+}
+
+.register-link a{
+    padding: 0.15rem 1rem;
+}
+
+.games-container
+{
+
+}
+
+.game-container
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.game-container h5
+{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.game-img
+{
+    display: inline-block;
+    border-radius: var(--border-radius);
+    width: 7vw;
+    height: 3vw;
+}

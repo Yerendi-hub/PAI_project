@@ -13,6 +13,11 @@ services:
       - php
 
   php:
+    environment:
+      - DB_USERNAME
+      - PASSWORD
+      - DATABASE
+      - HOST
     build:
       context: .
       dockerfile: docker/php/Dockerfile

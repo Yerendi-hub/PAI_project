@@ -12,8 +12,8 @@
         ?>
         <main class="page">
             <section class="login-container">
-                    <form class="form" action="postLogin" method="post">
-                        <h3>Login</h3>
+                    <form class="form" action="registerUser" method="post">
+                        <h3>Register</h3>
 
                         <div class="messages">
                             <?php
@@ -34,15 +34,10 @@
                             <input type="password" name="password" id="password" class="form-input" />
                         </div>
                         <button type="submit" class="btn btn-block">
-                            Login
+                            Register
                         </button>
                     </form>
             </section>
-
-            <div class="nav-link register-link">
-                <p class="register-text">You don't have account?</p>
-                <a href="register" class="btn"> Register </a>
-            </div>
         </main>
         <?
         include("public/templates/footer.php")

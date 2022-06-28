@@ -1,15 +1,18 @@
 <?php
 
 require_once __DIR__.'/../utils/SessionManager.php';
+require_once __DIR__.'/../repository/GameRepository.php';
 
 class AppController {
     private $request;
     protected $sessionManager;
+    protected $gameRepository;
 
     public function __construct()
     {
         $this->request = $_SERVER['REQUEST_METHOD'];
         $this->sessionManager = new SessionManager();
+        $this->gameRepository = new GameRepository();
     }
 
     protected function isGet(): bool
@@ -20,6 +23,22 @@ class AppController {
     protected function isPost(): bool
     {
         return $this->request === 'POST';
+    }
+
+    public function getSingleGame()
+    {
+        if (!$this->isPost()) {
+            return $this->render('login');
+        }
+
+        $gameId = $_POST['gameId'];
+        $game = $this->gameRepository->getGame((int)$gameId);
+
+        if (!$game) {
+            return $this->render('index');
+        }
+
+        return $this->render('singleGame', ['game' => [$game]]);
     }
 
     protected function render(string $template = null, array $variables = [])

@@ -1,5 +1,6 @@
 <?php
 
+require_once 'src/controllers/AppController.php';
 require_once 'src/controllers/DefaultController.php';
 require_once 'src/controllers/FavoriteGamesController.php';
 require_once 'src/controllers/LoginController.php';

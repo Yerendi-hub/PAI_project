@@ -11,7 +11,9 @@
         include("public/templates/navbar.php")
         ?>
         <main class="page">
-            <h1>Favorite games</h1>
+            <?
+            include("public/templates/games.php")
+            ?>
         </main>
         <?
         include("public/templates/footer.php")

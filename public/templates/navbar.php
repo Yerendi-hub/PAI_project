@@ -12,7 +12,7 @@
             <a href="/" class="nav-link"> Home </a>
             <a href="topGames" class="nav-link"> Top games </a>
             <a href="userGames" class="nav-link"> Your games </a>
-            <a href="contact" class="nav-link"> Contact </a>
+            <a href="favoriteGames" class="nav-link"> Favorite games </a>
             <div class="nav-link login-link">
                 <?
                 if(isset($isLogin)){

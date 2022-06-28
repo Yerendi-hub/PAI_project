@@ -10,8 +10,17 @@
         <?
         include("public/templates/navbar.php")
         ?>
+
         <main class="page">
-            <h1>Single game</h1>
+            <?
+            if(isset($game)) {
+                foreach ($game as $g) {
+                    echo('
+                        <h1>' . $g->getName() . '
+                        ');
+                }
+            }
+            ?>
         </main>
         <?
         include("public/templates/footer.php")

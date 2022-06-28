@@ -9,8 +9,9 @@ class Game
     private $likes;
     private $dislikes;
     private $owner;
+    private $image;
 
-    public function __construct($name, $description, $steamId, $owner, $likes = 0, $dislikes = 0, $id = null)
+    public function __construct($name, $description, $steamId, $owner, $image, $likes = 0, $dislikes = 0, $id = null)
     {
         $this->dbId = $id;
         $this->steamId = $steamId;
@@ -19,6 +20,7 @@ class Game
         $this->likes = $likes;
         $this->dislikes = $dislikes;
         $this->owner = $owner;
+        $this->image = $image;
     }
 
     /**
@@ -35,6 +37,22 @@ class Game
     public function setOwner($owner): void
     {
         $this->owner = $owner;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image): void
+    {
+        $this->image = $image;
     }
 
     /**
