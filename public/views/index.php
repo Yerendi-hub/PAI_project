@@ -20,6 +20,12 @@
                 </div>
             </header>
 
+            <div class="search-bar">
+                <form name="test" action="search" method="POST">
+                <input placeholder="search project" id="key" name="key">
+                </form>
+            </div>
+
             <?
             include("public/templates/games.php")
             ?>

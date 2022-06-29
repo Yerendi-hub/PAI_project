@@ -1,14 +1,23 @@
 <?php
 
 require_once 'Repository.php';
+require_once 'UserRepository.php';
 require_once __DIR__.'/../models/Game.php';
 
 class GameRepository extends Repository
 {
+    private $userRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userRepository = new UserRepository();
+    }
+
     public function getGame(int $id): ?Game
     {
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games JOIN images ON games.image = images.id WHERE games.id = :id
+            SELECT (CAST(SUM(vtg.value) AS float)/COUNT(*)) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id WHERE g.id = :id GROUP BY g.id, i.id;
         ');
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -19,17 +28,47 @@ class GameRepository extends Repository
             return null;
         }
 
-        return new Game(
+        $userVote = -2;
+        $userRole = 'none';
+        $user = 0;
+
+        if($this->sessionManager->validateSession())
+        {
+            $userVote = -1;
+            $user = $_SESSION['user'];
+            $stmt = $this->database->connect()->prepare('
+            SELECT "value" FROM vote_to_game WHERE game = :gameId AND player = :playerId;
+        ');
+
+            $stmt->bindParam(':gameId', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':playerId', $user, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $vote = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($vote) {
+                $userVote = $vote['value'];
+            }
+
+            $userRole = $this->userRepository->getById($user)->getRole();
+        }
+
+        $game = new Game(
             $game['name'],
             $game['description'],
             $game['steamid'],
             $game['owner'],
             $game['binary_data'],
-            $game['likes'],
-            $game['dislikes'],
+            $game['votes'],
             $game['id']
         );
+
+        $game->setUserVote($userVote);
+        $game->setCanUserDeleteGame($game->getOwner() == $user || $userRole === 'admin');
+
+        return $game;
     }
+
     public function addImage($image): string
     {
         $connection = $this->database->connect();
@@ -40,20 +79,27 @@ class GameRepository extends Repository
         return $connection->lastInsertId();
     }
 
+    public function addVote($vote, $game)
+    {
+        if($this->sessionManager->validateSession())
+        {
+            $connection = $this->database->connect();
+            $stmt = $connection->prepare($this->addVoteSql());
+
+            $stmt->execute([$_SESSION['user'], $vote, $game]);
+        }
+    }
+
     public function addGame(Game $game): void
     {
         $id = $this->addImage($game->getImage());
         $stmt = $this->database->connect()->prepare($this->insertGameSql());
 
-        $assignedById = $_SESSION['user'];
-
         $stmt->execute([
             $game->getName(),
-            $game->getLikes(),
-            $game->getDislikes(),
             $game->getDescription(),
             $game->getSteamId(),
-            $assignedById,
+            $game->getOwner(),
             $id
         ]);
     }
@@ -63,7 +109,7 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games JOIN images ON games.image = images.id;
+           SELECT  (CAST(SUM(vtg.value) AS float)/COUNT(*)) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id GROUP BY g.id, i.id;
         ');
 
         return $this->fetch_games($stmt, $result);
@@ -74,7 +120,7 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games JOIN images ON games.image = images.id ORDER BY likes/NULLIF(likes+dislikes,0) desc LIMIT 1;
+            SELECT * FROM (SELECT (CAST(SUM(vtg.value) AS float)/COUNT( * )) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id group by i.id, g.id) as A ORDER BY NULLIF(A.votes,0) asc LIMIT 1
         ');
 
         return $this->fetch_games($stmt, $result);
@@ -85,49 +131,32 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games JOIN images ON games.image = images.id WHERE games.owner = :id;
+            SELECT (CAST(SUM(vtg.value) AS float)/COUNT(*)) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id WHERE g.owner = :id GROUP BY g.id, i.id;
+
         ');
 
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
         return $this->fetch_games($stmt, $result);
     }
 
-    public function getGameByTitle(string $searchString)
+    public function getGameByTitle(string $searchString): array
     {
+        $result = [];
         $searchString = '%' . strtolower($searchString) . '%';
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM games WHERE LOWER(title) LIKE :search OR LOWER(description) LIKE :search
+            SELECT (CAST(SUM(vtg.value) AS float)/COUNT(*)) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id WHERE LOWER(g.name) LIKE :search GROUP BY g.id, i.id;
         ');
         $stmt->bindParam(':search', $searchString, PDO::PARAM_STR);
-        $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function like(int $id) {
-        $stmt = $this->database->connect()->prepare('
-            UPDATE games SET "like" = "like" + 1 WHERE id = :id
-         ');
-
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-    }
-
-    public function dislike(int $id) {
-        $stmt = $this->database->connect()->prepare('
-            UPDATE games SET dislike = dislike + 1 WHERE id = :id
-         ');
-
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
+        return $this->fetch_games($stmt, $result);
     }
 
     public function insertGameSql()
     {
         return '
-            INSERT INTO games (name, likes, dislikes, description, steamid, owner, image)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO games (name, description, steamid, owner, image)
+            VALUES (?, ?, ?, ?, ?)
         ';
     }
 
@@ -136,6 +165,16 @@ class GameRepository extends Repository
         return '
             INSERT INTO images (binary_data)
             VALUES (?)
+        ';
+    }
+
+    public function addVoteSql()
+    {
+        return '
+            INSERT INTO vote_to_game (player, value, game) 
+        VALUES (?, ?, ?)
+        ON CONFLICT (player, game) DO UPDATE 
+        SET value = excluded.value 
         ';
     }
 
@@ -151,8 +190,7 @@ class GameRepository extends Repository
                 $game['steamid'],
                 $game['owner'],
                 $game['binary_data'],
-                $game['likes'],
-                $game['dislikes'],
+                $game['votes'],
                 $game['id']
             );
         }

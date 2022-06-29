@@ -18,4 +18,10 @@ class DefaultController extends AppController {
         $games = $this->gamesRepository->getGames();
         $this->render('index', ['games' => $games]);
     }
+
+    public function search()
+    {
+        $games = $this->gamesRepository->getGameByTitle($_POST['key']);
+        $this->render('index', ['games' => $games]);
+    }
 }

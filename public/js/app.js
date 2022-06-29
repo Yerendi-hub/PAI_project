@@ -19,3 +19,12 @@ navBtn.addEventListener('click', () => {
 const date = getElement('#date')
 const currentYear = new Date().getFullYear()
 date.textContent = currentYear
+
+const search = getElement('input[placeholder="search project"]')
+
+search.addEventListener("keyup", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        document.test.submit();
+    }
+});

@@ -43,14 +43,15 @@ class UserGamesController extends AppController {
             $type = pathinfo($path, PATHINFO_EXTENSION);
             $data = file_get_contents($path);
             $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            $assignedById = $_SESSION['user'];
 
-            $game = new Game($_POST['name'], $_POST['description'], $_POST['steamId'],1, $base64);
+            $game = new Game($_POST['name'], $_POST['description'], $_POST['steamId'],$assignedById, $base64);
 
             $this->gamesRepository->addGame($game);
 
             return $this->render('userGames', [
                 'messages' => $this->message,
-                'games' => $this->gamesRepository->getGames()
+                'games' => $this->gamesRepository->getPlayerGames($assignedById)
             ]);
         }
         return $this->render('userGames');
@@ -83,15 +84,5 @@ class UserGamesController extends AppController {
             return false;
         }
         return true;
-    }
-
-    public function like(int $id) {
-        $this->gamesRepository->like($id);
-        http_response_code(200);
-    }
-
-    public function dislike(int $id) {
-        $this->gamesRepository->dislike($id);
-        http_response_code(200);
     }
 }

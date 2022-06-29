@@ -6,14 +6,6 @@ require_once __DIR__.'/../repository/UserRepository.php';
 
 class LoginController extends AppController {
 
-    private $userRepository;
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->userRepository = new UserRepository();
-    }
-
     public function postLogin()
     {
         if (!$this->isPost()) {

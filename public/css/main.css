@@ -192,6 +192,7 @@
 {
     display: flex;
     flex-direction: row;
+    margin: 1rem auto 0;
 }
 
 .game-container h5
@@ -206,4 +207,38 @@
     border-radius: var(--border-radius);
     width: 7vw;
     height: 3vw;
+}
+
+.btn-link {
+    background: var(--bg-color);
+}
+
+.btn-link:hover{
+    background: var(--bg-color);
+    color: var(--primary-500);
+    box-shadow: var(--shadow-3);
+}
+
+.btn-unusable {
+    background: var(--bg-color);
+}
+
+.btn-unusable:hover{
+    background: var(--bg-color);
+}
+
+.search-bar {
+    width: 30vw
+}
+
+.search-bar > input {
+    background: var(--gray-400) 0% 0% no-repeat padding-box;
+    box-shadow: var(--shadow-3);
+    border: 2px solid var(--gray-100);
+    border-radius: var(--border-radius);
+    width: 98%;
+    text-align: left;
+    letter-spacing: var(--letterSpacing);
+    color: var(--white);
+    box-sizing: border-box;
 }

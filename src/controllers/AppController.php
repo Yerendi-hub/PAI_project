@@ -7,12 +7,14 @@ class AppController {
     private $request;
     protected $sessionManager;
     protected $gameRepository;
+    protected $userRepository;
 
     public function __construct()
     {
         $this->request = $_SERVER['REQUEST_METHOD'];
         $this->sessionManager = new SessionManager();
         $this->gameRepository = new GameRepository();
+        $this->userRepository = new UserRepository();
     }
 
     protected function isGet(): bool

@@ -8,22 +8,19 @@ class UserRepository extends Repository
     public function getUser(string $email): ?User
     {
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM public.users WHERE email = :email
+            SELECT u.id as id, u.email as email, u.password as password, r.name as name FROM public.users u JOIN roles r ON r.id = u.id_role WHERE email = :email
         ');
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
+        return $this->setUser($stmt);
+    }
 
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$user) {
-            return null;
-        }
-
-        return new User(
-            $user['id'],
-            $user['email'],
-            $user['password']
-        );
+    public function getById(string $email): ?User
+    {
+        $stmt = $this->database->connect()->prepare('
+            SELECT u.id as id, u.email as email, u.password as password, r.name as name FROM public.users u JOIN roles r ON r.id = u.id_role WHERE u.id = :id
+        ');
+        $stmt->bindParam(':id', $email, PDO::PARAM_STR);
+        return $this->setUser($stmt);
     }
 
     public function createUser(string $email, string $password)
@@ -37,6 +34,24 @@ class UserRepository extends Repository
             $email,
             password_hash($password, PASSWORD_DEFAULT)
         ]);
+    }
+
+    public function setUser($stmt): ?User
+    {
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            return null;
+        }
+
+        return new User(
+            $user['id'],
+            $user['email'],
+            $user['password'],
+            $user['name']
+        );
     }
 
 

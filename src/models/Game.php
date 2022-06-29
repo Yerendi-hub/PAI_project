@@ -6,21 +6,24 @@ class Game
     private $steamId;
     private $name;
     private $description;
-    private $likes;
-    private $dislikes;
     private $owner;
     private $image;
+    private $votes;
+    private $userVote;
+    private $ccu;
+    private $canUserDeleteGame;
 
-    public function __construct($name, $description, $steamId, $owner, $image, $likes = 0, $dislikes = 0, $id = null)
+    public function __construct($name, $description, $steamId, $owner, $image, $votes = 0, $id = null, $userVote = -1, $canUserDeleteGame = false)
     {
         $this->dbId = $id;
         $this->steamId = $steamId;
         $this->name = $name;
         $this->description = $description;
-        $this->likes = $likes;
-        $this->dislikes = $dislikes;
         $this->owner = $owner;
         $this->image = $image;
+        $this->votes = $votes;
+        $this->userVote = $userVote;
+        $this->canUserDeleteGame = $canUserDeleteGame;
     }
 
     /**
@@ -30,6 +33,23 @@ class Game
     {
         return $this->owner;
     }
+
+    /**
+     * @return int|mixed
+     */
+    public function getUserVote()
+    {
+        return $this->userVote;
+    }
+
+    /**
+     * @param int|mixed $userVote
+     */
+    public function setUserVote($userVote): void
+    {
+        $this->userVote = $userVote;
+    }
+
 
     /**
      * @param mixed $owner
@@ -61,6 +81,38 @@ class Game
     public function getDbId()
     {
         return $this->dbId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVotes()
+    {
+        return $this->votes;
+    }
+
+    /**
+     * @param mixed $votes
+     */
+    public function setVotes($votes): void
+    {
+        $this->votes = $votes;
+    }
+
+    /**
+     * @return false|mixed
+     */
+    public function getCanUserDeleteGame()
+    {
+        return $this->canUserDeleteGame;
+    }
+
+    /**
+     * @param false|mixed $canUserDeleteGame
+     */
+    public function setCanUserDeleteGame($canUserDeleteGame): void
+    {
+        $this->canUserDeleteGame = $canUserDeleteGame;
     }
 
     /**
@@ -117,38 +169,6 @@ class Game
     public function setDescription($description): void
     {
         $this->description = $description;
-    }
-
-    /**
-     * @return int|mixed
-     */
-    public function getLikes()
-    {
-        return $this->likes;
-    }
-
-    /**
-     * @param int|mixed $likes
-     */
-    public function setLikes($likes): void
-    {
-        $this->likes = $likes;
-    }
-
-    /**
-     * @return int|mixed
-     */
-    public function getDislikes()
-    {
-        return $this->dislikes;
-    }
-
-    /**
-     * @param int|mixed $dislikes
-     */
-    public function setDislikes($dislikes): void
-    {
-        $this->dislikes = $dislikes;
     }
 
 
