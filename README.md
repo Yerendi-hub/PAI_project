@@ -1,8 +1,7 @@
 # Steam Engine
-> Games library 
-> 
-> 
-> Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
+![Example screenshot](./screens/logo.png)
+
+> Games library
 
 ## Table of Contents
 * [General Info](#general-information)
@@ -39,11 +38,23 @@ Steam Engine is project realized for Projektowanie Aplikacji Internetowych cours
 - Listing games added by user
 - Voting for games
 - Listing top games
-
+- Current players count
 
 ## Screenshots
-![Example screenshot](./img/screenshot.png)
-<!-- If you have screenshots you'd like to share, include them here. -->
+ERD
+![Example screenshot](./screens/erd.png)
+
+Home 
+![Example screenshot](./screens/home.png)
+
+Login 
+![Example screenshot](./screens/login.png)
+
+Your games
+![Example screenshot](./screens/yourGames.png)
+
+Top 10
+![Example screenshot](./screens/top10.png)
 
 
 ## Setup
@@ -70,10 +81,11 @@ To do:
 - Favorite games
 - Comments
 - Steam integration
-
+- Pagination
 
 ## Acknowledgements
 - This project was inspired by [steamDB](https://steamdb.info/).
+- Used api for ccu: [steamspy](https://steamspy.com/api.php).
 
 
 ## Contact

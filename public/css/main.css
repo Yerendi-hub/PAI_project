@@ -209,6 +209,14 @@
     height: 3vw;
 }
 
+.big-game-img
+{
+    display: inline-block;
+    border-radius: var(--border-radius);
+    width: 30vw;
+    height: 12vw;
+}
+
 .btn-link {
     background: var(--bg-color);
 }

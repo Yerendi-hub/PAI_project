@@ -11,6 +11,7 @@
         include("public/templates/navbar.php")
         ?>
         <main class="page">
+            <h3>Top 10 games by user votes</h3>
             <?
             include("public/templates/games.php")
             ?>

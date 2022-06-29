@@ -15,6 +15,6 @@ class CurlRequests
         $resp = curl_exec($curl);
         curl_close($curl);
         self::$lastCurl = $curl;
-        return $resp;
+        return json_decode($resp);
     }
 }

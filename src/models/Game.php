@@ -116,6 +116,22 @@ class Game
     }
 
     /**
+     * @return mixed
+     */
+    public function getCcu()
+    {
+        return $this->ccu;
+    }
+
+    /**
+     * @param mixed $ccu
+     */
+    public function setCcu($ccu): void
+    {
+        $this->ccu = $ccu;
+    }
+
+    /**
      * @param mixed|null $dbId
      */
     public function setDbId($dbId): void

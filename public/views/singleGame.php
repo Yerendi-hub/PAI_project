@@ -17,9 +17,15 @@
                 foreach ($game as $g) {
                     echo('
                         <h1>' . $g->getName() . '</h1>
-                        <img id="base64ImageForDisplay" alt="Preview Image" src='.$g->getImage().' class="img game-img">
+                        <img id="base64ImageForDisplay" alt="Preview Image" src='.$g->getImage().' class="img big-game-img">
+                        <h5> '. $g->getDescription() .'</h5>
                         <h3> Votes: ' . (int)($g->getVotes() * 100) . '%</h3>
                         ');
+
+                    if($g->getCcu() != -1)
+                    {
+                        echo '<h3> Current players: ' . (int)($g->getCcu()) . '</h3>';
+                    }
 
                     if($g->getUserVote() !== -2)
                     {

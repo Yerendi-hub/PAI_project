@@ -3,6 +3,7 @@
 require_once 'Repository.php';
 require_once 'UserRepository.php';
 require_once __DIR__.'/../models/Game.php';
+require_once __DIR__.'/../utils/CurlRequests.php';
 
 class GameRepository extends Repository
 {
@@ -65,6 +66,17 @@ class GameRepository extends Repository
 
         $game->setUserVote($userVote);
         $game->setCanUserDeleteGame($game->getOwner() == $user || $userRole === 'admin');
+
+        $ccu = -1;
+
+        if($game->getSteamId() !== 0)
+        {
+           $ccu_resp = CurlRequests::get('https://steamspy.com/api.php?request=appdetails&appid='.$game->getSteamId());
+           $ccu = $ccu_resp->ccu;
+
+        }
+
+        $game->setCcu($ccu);
 
         return $game;
     }
@@ -138,7 +150,7 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM (SELECT (CAST(SUM(vtg.value) AS float)/COUNT( * )) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id group by i.id, g.id) as A ORDER BY NULLIF(A.votes,0) asc LIMIT 1
+            SELECT * FROM (SELECT (CAST(SUM(vtg.value) AS float)/COUNT( * )) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id group by i.id, g.id) as A ORDER BY NULLIF(A.votes,0) asc LIMIT 10
         ');
 
         return $this->fetch_games($stmt, $result);
