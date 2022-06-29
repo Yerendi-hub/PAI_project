@@ -150,7 +150,7 @@ class GameRepository extends Repository
         $result = [];
 
         $stmt = $this->database->connect()->prepare('
-            SELECT * FROM (SELECT (CAST(SUM(vtg.value) AS float)/COUNT( * )) as votes, g.id as id, g.name as name, g.description as description, g.owner as owner, g.steamid as steamid, i.binary_data as binary_data FROM games g LEFT JOIN vote_to_game vtg ON g.id = vtg.game JOIN images i ON g.image = i.id group by i.id, g.id) as A ORDER BY NULLIF(A.votes,0) asc LIMIT 10
+            SELECT * FROM "view_topGames";
         ');
 
         return $this->fetch_games($stmt, $result);
