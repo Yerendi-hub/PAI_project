@@ -242,3 +242,13 @@
     color: var(--white);
     box-sizing: border-box;
 }
+
+.btn-delete {
+    background: var(--red-dark);
+}
+
+.btn-delete:hover{
+    background: var(--red-light);
+    color: var(--white);
+    box-shadow: var(--shadow-3);
+}

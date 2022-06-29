@@ -30,4 +30,17 @@ class SingleGameController extends AppController{
         $this->getSingleGame();
     }
 
+    public function deleteGame()
+    {
+        if (!$this->isPost()) {
+            return $this->render('login');
+        }
+
+        $game = $_POST['gameId'];
+
+        $this->gameRepository->deleteGame($game);
+        $url = "http://$_SERVER[HTTP_HOST]";
+        header("Location: {$url}/index");
+    }
+
 }

@@ -19,6 +19,7 @@ Routing::post('addGame', "UserGamesController");
 Routing::get('singleGame', "SingleGameController");
 Routing::post('voteUp', "SingleGameController");
 Routing::post('voteDown', "SingleGameController");
+Routing::post('deleteGame', "SingleGameController");
 Routing::get('topGames', "TopGamesController");
 Routing::get('userGames', "UserGamesController");
 Routing::get('contact', "FavoriteGamesController");

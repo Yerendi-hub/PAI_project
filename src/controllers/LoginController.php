@@ -72,6 +72,7 @@ class LoginController extends AppController {
     public function logout()
     {
         $this->sessionManager->closeSession();
-        $this->render("index");
+        $url = "http://$_SERVER[HTTP_HOST]";
+        header("Location: {$url}/index");
     }
 }

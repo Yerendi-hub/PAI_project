@@ -71,8 +71,16 @@
                     if($g->getCanUserDeleteGame())
                     {
                         echo '
-                            <h5>moze usuwac</h5>
-                            ';
+                        <br/>
+                        <br/>
+                        <br/>
+                            <form action="deleteGame" method="post">                      
+                        <input type="hidden" name="gameId" id="gameId" value='.$g->getDbId().'>
+                        <button type="submit" class="btn btn-delete">
+                            Delete game
+                        </button>
+                        </form>
+                        ';
                     }
                 }
             }

@@ -90,6 +90,24 @@ class GameRepository extends Repository
         }
     }
 
+    public function deleteGame($game)
+    {
+        if($this->sessionManager->validateSession())
+        {
+            $connection = $this->database->connect();
+            $stmt = $connection->prepare($this->deleteGameSql());
+
+            $g = $this->getGame($game);
+            $user = $this->userRepository->getById($_SESSION['user']);
+
+            if($g ->getOwner() == $user->getId() || $user->getRole() === 'admin')
+            {
+                $stmt->execute([$game]);
+            }
+
+        }
+    }
+
     public function addGame(Game $game): void
     {
         $id = $this->addImage($game->getImage());
@@ -175,6 +193,13 @@ class GameRepository extends Repository
         VALUES (?, ?, ?)
         ON CONFLICT (player, game) DO UPDATE 
         SET value = excluded.value 
+        ';
+    }
+
+    public function deleteGameSql()
+    {
+        return '
+            DELETE FROM games WHERE id = (?)
         ';
     }
 
